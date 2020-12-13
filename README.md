@@ -1,0 +1,1 @@
+# bitacademydiary_note_2020
