@@ -56,6 +56,10 @@ Data :  payload(실제로 전송되는 데이터)
 Footer : byte로 이뤄진 control data를 가지는 경우가 많음
 ```
 
+<br>
+<hr>
+<br>
+
 ### Peer-to-Peer Networking
 ```
 모든 네트워크가 동료처럼 주고 받음
@@ -65,3 +69,8 @@ Footer : byte로 이뤄진 control data를 가지는 경우가 많음
 ```
 고객과 섬김 하는 네트워크로 몇 몇 중앙 서버가 많은 수의 고객 장치들에게 서비스를 제공함
 ```
+
+<br>
+<hr>
+<br>
+
