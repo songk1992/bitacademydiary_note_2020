@@ -39,7 +39,7 @@ Windows IP 구성
 
 ###  1. IP Address
 ###  2. Subnet Mask
-inet 192.168.200.200
+리눅스에서 서브넷 마스크와 IP주소를 
 
 ```
 inet 192.168.200.200  netmask 255.255.255.0 
@@ -103,4 +103,11 @@ GATEWAY=192.168.200.254
 systemctl restart network.service  
 ```
 
+### 확인
+```
+[root@lx01 network-scripts]# nslookup
+> www.naver.com
+
+[root@lx01 network-scripts]# ifconfig
+```
 
