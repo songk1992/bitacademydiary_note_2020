@@ -1,0 +1,121 @@
+### TCP SOCKET PROGRAMMING BASICS
+
+<table>
+<tr align = 'center'>
+<td>서버</td>
+<td></td>
+<td>클라이언트</td>
+</tr>
+<tr align = 'center'>
+<td>소켓 객체 생성</td>
+<td></td>
+<td>소켓 객체 생성</td>
+</tr>
+<tr align = 'center'>
+<td>bind</td>
+<td></td>
+<td></td>
+</tr>
+<tr align = 'center'>
+<td>accept</td>
+<td> <- </td>
+<td>connect</td>
+</tr>
+<tr align = 'center'>
+<td>read</td>
+<td> <- </td>
+<td>write</td>
+</tr>
+<tr align = 'center'>
+<td>write</td>
+<td> -> </td>
+<td>read</td>
+</tr>
+<tr align = 'center'>
+<td>close</td>
+<td></td>
+<td>close</td>
+</tr>
+</table>
+
+
+``` java
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class TCPServer {
+
+	public static void main(String[] args) {
+		ServerSocket serverSocket = null;
+		
+		try {
+			//1. 서버소켓 생성
+			serverSocket = new ServerSocket();
+			
+			//2. 바인딩(binding): Socket Address(IP Address + Port)
+			serverSocket.bind(new InetSocketAddress("127.0.0.1", 6000));
+
+			//3. accept
+			Socket socket = serverSocket.accept();  // blocking
+			
+			InetSocketAddress remoteInetSocketAddress = (InetSocketAddress)socket.getRemoteSocketAddress();
+			InetAddress remoteInetAddress = remoteInetSocketAddress.getAddress();
+			String remoteHostAddress = remoteInetAddress.getHostAddress();
+			int remotePort = remoteInetSocketAddress.getPort();
+			System.out.println("[server] connected by client[" + remoteHostAddress + ":" + remotePort + "]");
+			
+			try {
+				//4. IOStream 받아 오기
+				InputStream is = socket.getInputStream();
+				OutputStream os = socket.getOutputStream();
+				
+				while(true) {
+					//5. 데이터 읽기
+					byte[] buffer = new byte[256];
+					int readByteCount = is.read(buffer); // blocking
+					
+					if(readByteCount == -1){
+						// client가 소켓을 정상적으로 종료
+						System.out.println("[server] closed by client");
+						break;
+					}
+					
+					String data = new String(buffer, 0, readByteCount, "UTF-8");
+					System.out.println("[server] received:" + data);
+					
+					//6. 데이터쓰기
+					os.write(data.getBytes("utf-8"));
+				}
+				
+				
+			} catch(IOException e) {
+				System.out.println("[server] error:" + e);
+			} finally {
+				try {
+					socket.close();
+				} catch(IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+		} catch (IOException e) {
+			System.out.println("[server] error:" + e);
+		} finally {
+			try {
+				if(serverSocket != null && serverSocket.isClosed()) {
+					serverSocket.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
+
+}
+```
