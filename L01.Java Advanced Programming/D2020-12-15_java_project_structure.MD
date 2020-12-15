@@ -1,3 +1,6 @@
+
+```
+
 project
   | -- src 디렉토리 				(/src , /src/main/java)
   |	|--패키지(디렉토리)
@@ -16,3 +19,5 @@ Application(/bin , /taget/classes)
   |--패키지(디렉토리)
   |	|-- 리소스 파일(.xml)
   |	|-- 리소스 파일(.properties)
+  
+```
