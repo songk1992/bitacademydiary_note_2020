@@ -188,13 +188,42 @@ mysql -p
 show databases;
 ```
 
+
+8. 
+webdb 생성
+
+
+```
+mysql -u webdb -D webdb -p
 ```
 
 ```
-
+mysql -p
 ```
 
 ```
+create database webdb;
+create user 'webdb'@'localhost' identified by 'webdb';
+grant all privileges on webdb.* to 'webdb'@'localhost';
+flush privileges;
+
+create database webdb;
+create user 'webdb'@' 192.168.%' identified by 'webdb';
+grant all privileges on webdb.* to 'webdb'@'localhost';
+flush privileges;
+exit
+```
+
+
+window workbench 사용
+
+Setup New Connection
+Name : dba
+Hostname 192.168.1.12 (리눅스 ifconfig inet)
+port : 3307
+user name : root
+Default Schema : mysql
+
 
 ```
 
