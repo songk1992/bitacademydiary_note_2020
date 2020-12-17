@@ -46,5 +46,161 @@ make && make install
 ```
 
 
+5. 설정
+5-1 설치 디렉토리 및 파일 권한 변경
+```
+chown -R mysql:mysql /usr/local/javafullstack/maria/db
+```
 
+5-2. 설정파일 /etc로 옮긴다
+```
+cp - R /usr/local/javafullstack/maria/etc/my.cnf.d / etc
+```
+
+5-3 기본 데이터베이스 생성
+```
+/usr/local/javafullstack/mariadb/scripts/mysql_install_db --user=mysql --basedir=/usr/local/javafullstack/mariadb --defaults-file=/usr/local/javafullstack/mariadb/etc/my.cnf --datadir=/usr/local/javafullstack/mariadb/data
+```
+
+5-4 tmp 디렉토리 생성
+```
+# mkdir /usr/local/javafullstack/mariadb/tmp
+# chown mysql:mysql /usr/local/javafullstack/mariadb/tmp
+```
+
+5-5 서버 실행해보기
+```
+/usr/local/javafullstack/mariadb/bin/mysqld_safe &
+
+ps-ef | grep mysql
+
+```
+5-6. root password 설정
+```
+/usr/local/javafullstack/mariadb/bin/mysqladmin -u root password '비밀번호'
+```
+5-7. 접속하기
+```
+/usr/local/javafullstack/mariadb/bin/mysql -p
+```
+
+mariadb
+
+```
+show databases
+```
+
+디비 선택
+```
+use mysql
+```
+
+테이블 확인
+```
+show tables
+```
+
+종료
+```
+exit
+```
+
+6. 서비스 등록
+```
+vi /etc/systemd/system/mariadb.service
+```
+
+복붙
+```
+[Unit]
+Description=MariaDB Database Server
+After=syslog.target
+After=network.target
+
+[Service]
+User=mysql
+Group=mysql
+
+KillMode=process
+KillSignal=SIGTERM
+SendSIGKILL=no
+
+LimitNOFILE=infinity
+LimitNPROC=4096
+LimitCORE=infinity
+PermissionsStartOnly=true
+PrivateTmp=true
+OOMScoreAdjust=-1000
+ExecStartPre=sync
+ExecStartPre=sysctl -q -w vm.drop_caches=3
+ExecStart=/usr/local/javafullstack/mariadb/bin/mysqld --defaults-file=/usr/local/javafullstack/mariadb/etc/my.cnf --plugin-dir=/usr/local/javafullstack/mariadb/lib/plugin --pid-file=/usr/local/javafullstack/mariadb/mysqld.pid
+Restart=always
+RestartSec=1
+TimeoutSec=300
+
+[Install]
+WantedBy=multi-user.target
+```
+
+
+```
+systemctl enable mariadb
+```
+
+```
+systemctl start mariadb
+```
+
+```
+systemctl status mariadb
+```
+
+```
+systemctl stop mariadb
+```
+
+```
+ps -ef | grep mysql
+```
+
+```
+reboot
+```
+
+7. /usr/local/javafullstack/mariadb/bin directory path 환경변수 설정
+```
+vi /etc/profile
+path 변수에 /usr/local/javafullstack/mariadb/bin 추가
+#mariadb
+export PATH=$PATH:/usr/local/javafullstack/mariadb/bin
+```
+
+테스트
+```
+source /etc/profile
+```
+
+```
+mysql -p
+```
+
+```
+show databases;
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
 
