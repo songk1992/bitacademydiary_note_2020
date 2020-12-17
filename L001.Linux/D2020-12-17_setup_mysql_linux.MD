@@ -10,7 +10,7 @@ libxml*
 freetype*
 libpng*
 libjpeg*
-iconv
+glibc
 flex
 gmp
 ncurses-devel
@@ -49,12 +49,12 @@ make && make install
 5. 설정
 5-1 설치 디렉토리 및 파일 권한 변경
 ```
-chown -R mysql:mysql /usr/local/javafullstack/maria/db
+chown -R mysql:mysql /usr/local/javafullstack/mariadb
 ```
 
 5-2. 설정파일 /etc로 옮긴다
 ```
-cp - R /usr/local/javafullstack/maria/etc/my.cnf.d / etc
+cp -R /usr/local/javafullstack/mariadb/etc/my.cnf.d /etc
 ```
 
 5-3 기본 데이터베이스 생성
@@ -68,50 +68,29 @@ cp - R /usr/local/javafullstack/maria/etc/my.cnf.d / etc
 # chown mysql:mysql /usr/local/javafullstack/mariadb/tmp
 ```
 
-5-5 서버 실행해보기
+yes y 치면됨
 ```
-/usr/local/javafullstack/mariadb/bin/mysqld_safe &
+cp: overwrite `/etc/my.cnf.d/tokudb.cnf'? y
+cp: overwrite `/etc/my.cnf.d/client.cnf'? y
+cp: overwrite `/etc/my.cnf.d/mysql-clients.cnf'? y
+cp: overwrite `/etc/my.cnf.d/server.cnf'? y
+cp: overwrite `/etc/my.cnf.d/enable_encryption.preset'? y
+```
 
-ps-ef | grep mysql
+5-5. 서버 실행해보기
+# /usr/local/javafullstack/mariadb/bin/mysqld_safe &
+# ps -ef | grep mysql
 
-```
-5-6. root password 설정
-```
-/usr/local/javafullstack/mariadb/bin/mysqladmin -u root password '비밀번호'
-```
+5-6. root 패쓰워드 설정하기
+# /usr/local/javafullstack/mariadb/bin/mysqladmin -u root password '비밀번호'
+
 5-7. 접속하기
-```
-/usr/local/javafullstack/mariadb/bin/mysql -p
-```
-
-mariadb
-
-```
-show databases
-```
-
-디비 선택
-```
-use mysql
-```
-
-테이블 확인
-```
-show tables
-```
-
-종료
-```
-exit
-```
+# /usr/local/javafullstack/mariadb/bin/mysql -p
 
 6. 서비스 등록
-```
-vi /etc/systemd/system/mariadb.service
-```
+#vi /etc/systemd/system/mariadb.service
 
-복붙
-```
+===========================================================
 [Unit]
 Description=MariaDB Database Server
 After=syslog.target
@@ -140,40 +119,41 @@ TimeoutSec=300
 
 [Install]
 WantedBy=multi-user.target
-```
+===========================================================
 
+# systemctl enable mariadb
+# systemctl status mariadb
+# systemctl start mariadb
+# systemctl stop mariadb
+# systemctl start mariadb
 
-```
-systemctl enable mariadb
-```
+# reboot
 
-```
-systemctl start mariadb
-```
+7. /usr/local/javafullstack/mariadb/bin 디레토리를 PATH 환경변수 설정
+# vi /etc/profile
+PATH 변수에 /usr/local/javafullstack/mariadb/bin 추가
+===========================================================
 
-```
-systemctl status mariadb
-```
-
-```
-systemctl stop mariadb
-```
-
-```
-ps -ef | grep mysql
-```
-
-```
-reboot
-```
-
-7. /usr/local/javafullstack/mariadb/bin directory path 환경변수 설정
-```
-vi /etc/profile
-path 변수에 /usr/local/javafullstack/mariadb/bin 추가
-#mariadb
+# mariadb
 export PATH=$PATH:/usr/local/javafullstack/mariadb/bin
-```
+
+===========================================================
+
+
+8. webdb 데이터베이스 생성
+create database webdb;
+
+9. 사용자 생성
+create user 'webdb'@'localhost' identified by 'webdb';
+create user 'webdb'@'192.168.1.%' identified by 'webdb';
+
+10. 권한부여
+grant all privileges on webdb.* to 'webdb'@'localhost';
+grant all privileges on webdb.* to 'webdb'@'192.168.1.%';
+
+flush privileges;
+flush privileges;
+flush privileges;
 
 테스트
 ```
