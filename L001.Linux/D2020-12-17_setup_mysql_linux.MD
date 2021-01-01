@@ -213,3 +213,4 @@ Default Schema : mysql
 
 ```
 
+or use https://mariadb.com/resources/blog/installing-mariadb-10-on-centos-7-rhel-7/
